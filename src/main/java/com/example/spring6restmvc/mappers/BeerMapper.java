@@ -1,0 +1,13 @@
+package com.example.spring6restmvc.mappers;
+
+import com.example.spring6restmvc.entities.Beer;
+import com.example.spring6restmvc.models.BeerDTO;
+import org.mapstruct.Mapper;
+
+@Mapper
+public interface BeerMapper {
+
+    Beer beerDtoToBeer(BeerDTO dto);
+
+    BeerDTO beerToBeerDto(Beer beer);
+}
