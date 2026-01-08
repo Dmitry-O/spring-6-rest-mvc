@@ -5,8 +5,10 @@ import com.example.spring6restmvc.services.BeerService;
 import com.example.spring6restmvc.services.BeerServiceImpl;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.ArgumentCaptor;
 import org.mockito.Captor;
+import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import org.springframework.boot.webmvc.test.autoconfigure.WebMvcTest;
@@ -30,6 +32,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 @WebMvcTest(BeerController.class)
+@ExtendWith(MockitoExtension.class)
 class BeerControllerTest {
 
     @Autowired
@@ -56,7 +59,7 @@ class BeerControllerTest {
 
     @Test
     void testPatchBeer() throws Exception {
-        BeerDTO beer = beerServiceImpl.listBeers().get(0);
+        BeerDTO beer = beerServiceImpl.listBeers(null, null, false).get(0);
 
         Map<String, Object> beerMap = new HashMap<>();
         beerMap.put("beerName", "New Name");
@@ -75,7 +78,7 @@ class BeerControllerTest {
 
     @Test
     void testDeleteBeer() throws Exception {
-        BeerDTO beer = beerServiceImpl.listBeers().get(0);
+        BeerDTO beer = beerServiceImpl.listBeers(null, null, false).get(0);
 
         given(beerService.deleteById(any())).willReturn(true);
 
@@ -92,7 +95,7 @@ class BeerControllerTest {
 
     @Test
     void testUpdateBeer() throws Exception {
-        BeerDTO beer = beerServiceImpl.listBeers().getFirst();
+        BeerDTO beer = beerServiceImpl.listBeers(null, null, false).getFirst();
 
         given(beerService.updateBeerById(any(), any())).willReturn(Optional.of(beer));
 
@@ -108,7 +111,7 @@ class BeerControllerTest {
 
     @Test
     void testUpdateBeerBlank() throws Exception {
-        BeerDTO beer = beerServiceImpl.listBeers().getFirst();
+        BeerDTO beer = beerServiceImpl.listBeers(null, null, false).getFirst();
         beer.setBeerName("");
 
         given(beerService.updateBeerById(any(), any())).willReturn(Optional.of(beer));
@@ -124,11 +127,11 @@ class BeerControllerTest {
 
     @Test
     void testCreateNewBeer() throws Exception {
-        BeerDTO beer = beerServiceImpl.listBeers().getFirst();
+        BeerDTO beer = beerServiceImpl.listBeers(null, null, false).getFirst();
         beer.setId(null);
         beer.setVersion(null);
 
-        given(beerService.saveNewBeer(any(BeerDTO.class))).willReturn(beerServiceImpl.listBeers().get(1));
+        given(beerService.saveNewBeer(any(BeerDTO.class))).willReturn(beerServiceImpl.listBeers(null, null, false).get(1));
 
         mockMvc.perform(post(BeerController.BEER_PATH)
                     .accept(MediaType.APPLICATION_JSON)
@@ -143,7 +146,7 @@ class BeerControllerTest {
     void testCreateBeerBlank() throws Exception {
         BeerDTO beerDTO = BeerDTO.builder().build();
 
-        given(beerService.saveNewBeer(any(BeerDTO.class))).willReturn(beerServiceImpl.listBeers().get(1));
+        given(beerService.saveNewBeer(any(BeerDTO.class))).willReturn(beerServiceImpl.listBeers(null, null, false).get(1));
 
         MvcResult mvcResult = mockMvc.perform(post(BeerController.BEER_PATH)
                         .accept(MediaType.APPLICATION_JSON)
@@ -159,7 +162,7 @@ class BeerControllerTest {
 
     @Test
     void testListBeers() throws Exception {
-        given(beerService.listBeers()).willReturn(beerServiceImpl.listBeers());
+        given(beerService.listBeers(any(), any(), any())).willReturn(beerServiceImpl.listBeers(null, null, false));
 
         mockMvc.perform(get(BeerController.BEER_PATH)
                 .accept(MediaType.APPLICATION_JSON))
@@ -178,7 +181,7 @@ class BeerControllerTest {
 
     @Test
     void getBeerById() throws Exception {
-        BeerDTO testBeer = beerServiceImpl.listBeers().getFirst();
+        BeerDTO testBeer = beerServiceImpl.listBeers(null, null, false).getFirst();
 
         given(beerService.getBeerById(testBeer.getId())).willReturn(Optional.of(testBeer));
 

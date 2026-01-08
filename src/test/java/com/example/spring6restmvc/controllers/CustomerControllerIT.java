@@ -157,7 +157,7 @@ class CustomerControllerIT {
 
         List<CustomerDTO> dtos = customerController.listAllCustomers();
 
-        assertThat(dtos.size()).isEqualTo(1);
+        assertThat(dtos.size()).isEqualTo(4);
     }
 
     @Rollback

@@ -1,6 +1,7 @@
 package com.example.spring6restmvc.controllers;
 
 import com.example.spring6restmvc.models.BeerDTO;
+import com.example.spring6restmvc.models.BeerStyle;
 import com.example.spring6restmvc.services.BeerService;
 
 import lombok.RequiredArgsConstructor;
@@ -29,7 +30,7 @@ public class BeerController {
     private final BeerService beerService;
 
     @PatchMapping(BEER_PATH_ID)
-    public ResponseEntity updateBeerPatchById(@PathVariable("beerId")UUID beerId, @RequestBody BeerDTO beer){
+    public ResponseEntity updateBeerPatchById(@PathVariable("beerId") UUID beerId, @RequestBody BeerDTO beer){
 
         if (beerService.patchBeerById(beerId, beer).isEmpty()) {
             throw new NotFoundException();
@@ -49,7 +50,7 @@ public class BeerController {
     }
 
     @PutMapping(BEER_PATH_ID)
-    public ResponseEntity updateById(@PathVariable("beerId")UUID beerId, @Validated @RequestBody BeerDTO beer){
+    public ResponseEntity updateById(@PathVariable("beerId") UUID beerId, @Validated @RequestBody BeerDTO beer){
 
         if (beerService.updateBeerById(beerId, beer).isEmpty()) {
             throw new NotFoundException();
@@ -70,8 +71,8 @@ public class BeerController {
     }
 
     @GetMapping(BEER_PATH)
-    public List<BeerDTO> listBeers(){
-        return beerService.listBeers();
+    public List<BeerDTO> listBeers(@RequestParam(required = false) String beerName, @RequestParam(required = false) BeerStyle beerStyle, @RequestParam(required = false) Boolean showInventory){
+        return beerService.listBeers(beerName, beerStyle, showInventory);
     }
 
     @GetMapping(BEER_PATH_ID)
