@@ -2,12 +2,14 @@ package com.example.spring6restmvc.services;
 
 import com.example.spring6restmvc.models.BeerCSVRecord;
 import com.opencsv.bean.CsvToBeanBuilder;
+import org.springframework.stereotype.Service;
 
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.util.List;
 
+@Service
 public class BeerCsvServiceImpl implements BeerCsvService {
     @Override
     public List<BeerCSVRecord> convertCSV(File csvFile) {
@@ -16,7 +18,6 @@ public class BeerCsvServiceImpl implements BeerCsvService {
                     .withType(BeerCSVRecord.class)
                     .build()
                     .parse();
-
             return beerCSVRecords;
         } catch (FileNotFoundException e) {
             throw new RuntimeException(e);
